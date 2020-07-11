@@ -25,7 +25,7 @@ type application struct {
 	runtimeEnv string
 	user       *mysql.UserModel
 	dropdown   *mysql.DropdownModel
-	item       *mysql.ItemModel
+	model      *mysql.MModel
 }
 
 func main() {
@@ -66,7 +66,7 @@ func main() {
 		runtimeEnv: *runtimeEnv,
 		user:       &mysql.UserModel{DB: db},
 		dropdown:   &mysql.DropdownModel{DB: db},
-		item:       &mysql.ItemModel{DB: db},
+		model:      &mysql.MModel{DB: db},
 	}
 
 	srv := &http.Server{

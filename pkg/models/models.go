@@ -38,14 +38,11 @@ type Dropdown struct {
 }
 
 type AllItemItem struct {
-	ItemID         string  `json:"item_id"`
-	ModelID        string  `json:"model_id"`
-	ItemCategoryID string  `json:"item_category_id"`
-	PageNo         string  `json:"page_no"`
-	ItemNo         string  `json:"item_no"`
-	ForeignID      string  `json:"foreign_id"`
-	ItemName       string  `json:"item_name"`
-	Price          float64 `json:"price"`
+	ID            int    `json:"id"`
+	Name          string `json:"name"`
+	Country       string `json:"country"`
+	PrimaryName   string `json:"primary_name"`
+	SecondaryName string `json:"secondary_name"`
 }
 
 type ItemDetails struct {

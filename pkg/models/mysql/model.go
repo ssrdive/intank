@@ -9,13 +9,13 @@ import (
 	"github.com/ssrdive/mysequel"
 )
 
-// ItemModel struct holds methods to query item table
-type ItemModel struct {
+// MModel struct holds methods to query item table
+type MModel struct {
 	DB *sql.DB
 }
 
 // Create creates an item
-func (m *ItemModel) Create(rparams, oparams []string, form url.Values) (int64, error) {
+func (m *MModel) Create(rparams, oparams []string, form url.Values) (int64, error) {
 	tx, err := m.DB.Begin()
 	if err != nil {
 		return 0, err
@@ -29,7 +29,7 @@ func (m *ItemModel) Create(rparams, oparams []string, form url.Values) (int64, e
 	}()
 
 	id, err := mysequel.Insert(mysequel.FormTable{
-		TableName: "item",
+		TableName: "model",
 		RCols:     rparams,
 		OCols:     oparams,
 		Form:      form,
@@ -43,9 +43,9 @@ func (m *ItemModel) Create(rparams, oparams []string, form url.Values) (int64, e
 }
 
 // All returns all items
-func (m *ItemModel) All() ([]models.AllItemItem, error) {
+func (m *MModel) All() ([]models.AllItemItem, error) {
 	var res []models.AllItemItem
-	err := mysequel.QueryToStructs(&res, m.DB, queries.ALL_ITEMS)
+	err := mysequel.QueryToStructs(&res, m.DB, queries.ALL_MODELS)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (m *ItemModel) All() ([]models.AllItemItem, error) {
 }
 
 // All returns all items
-func (m *ItemModel) Details(id string) (models.ItemDetails, error) {
+func (m *MModel) Details(id string) (models.ItemDetails, error) {
 	var itemDetails models.ItemDetails
 	err := m.DB.QueryRow(queries.ITEM_DETAILS, id).Scan(&itemDetails.ID, &itemDetails.ItemID, &itemDetails.ModelID, &itemDetails.ModelName, &itemDetails.ItemCategoryID, &itemDetails.ItemCategoryName, &itemDetails.PageNo, &itemDetails.ItemNo, &itemDetails.ForeignID, &itemDetails.ItemName, &itemDetails.Price)
 	if err != nil {

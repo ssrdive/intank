@@ -115,7 +115,7 @@ func (app *application) itemDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := app.item.Details(id)
+	items, err := app.model.Details(id)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
@@ -126,14 +126,14 @@ func (app *application) itemDetails(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) createItem(w http.ResponseWriter, r *http.Request) {
+func (app *application) createModel(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 
-	requiredParams := []string{"user_id", "item_id", "model_id", "item_category_id", "page_no", "item_no", "foreign_id", "item_name", "price"}
+	requiredParams := []string{"name", "country", "primary_name", "secondary_name"}
 	optionalParams := []string{}
 	for _, param := range requiredParams {
 		if v := r.PostForm.Get(param); v == "" {
@@ -143,7 +143,7 @@ func (app *application) createItem(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	id, err := app.item.Create(requiredParams, optionalParams, r.PostForm)
+	id, err := app.model.Create(requiredParams, optionalParams, r.PostForm)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -154,7 +154,7 @@ func (app *application) createItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) allItems(w http.ResponseWriter, r *http.Request) {
-	results, err := app.item.All()
+	results, err := app.model.All()
 	if err != nil {
 		app.serverError(w, err)
 		return
