@@ -9,13 +9,13 @@ import (
 	"github.com/ssrdive/mysequel"
 )
 
-// MModel struct holds methods to query item table
-type MModel struct {
+// Warehouse struct holds methods to query item table
+type Warehouse struct {
 	DB *sql.DB
 }
 
 // Create creates an item
-func (m *MModel) Create(rparams, oparams []string, form url.Values) (int64, error) {
+func (m *Warehouse) Create(rparams, oparams []string, form url.Values) (int64, error) {
 	tx, err := m.DB.Begin()
 	if err != nil {
 		return 0, err
@@ -29,7 +29,7 @@ func (m *MModel) Create(rparams, oparams []string, form url.Values) (int64, erro
 	}()
 
 	id, err := mysequel.Insert(mysequel.FormTable{
-		TableName: "model",
+		TableName: "warehouse",
 		RCols:     rparams,
 		OCols:     oparams,
 		Form:      form,
@@ -43,9 +43,9 @@ func (m *MModel) Create(rparams, oparams []string, form url.Values) (int64, erro
 }
 
 // All returns all items
-func (m *MModel) All() ([]models.AllItemItem, error) {
-	var res []models.AllItemItem
-	err := mysequel.QueryToStructs(&res, m.DB, queries.ALL_MODELS)
+func (m *Warehouse) All() ([]models.AllWarehouseItem, error) {
+	var res []models.AllWarehouseItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.ALL_WAREHOUSES)
 	if err != nil {
 		return nil, err
 	}

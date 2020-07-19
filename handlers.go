@@ -107,22 +107,30 @@ func (app *application) dropdownConditionHandler(w http.ResponseWriter, r *http.
 
 }
 
-func (app *application) itemDetails(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-	if id == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
-	items, err := app.model.Details(id)
+func (app *application) createWarehouse(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(items)
+	requiredParams := []string{"warehouse_type_id", "name", "address", "contact"}
+	optionalParams := []string{}
+	for _, param := range requiredParams {
+		if v := r.PostForm.Get(param); v == "" {
+			fmt.Println(param)
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+	}
+
+	id, err := app.warehouse.Create(requiredParams, optionalParams, r.PostForm)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	fmt.Fprintf(w, "%d", id)
 
 }
 
@@ -155,6 +163,17 @@ func (app *application) createModel(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) allItems(w http.ResponseWriter, r *http.Request) {
 	results, err := app.model.All()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (app *application) allWarehouses(w http.ResponseWriter, r *http.Request) {
+	results, err := app.warehouse.All()
 	if err != nil {
 		app.serverError(w, err)
 		return

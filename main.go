@@ -26,6 +26,7 @@ type application struct {
 	user       *mysql.UserModel
 	dropdown   *mysql.DropdownModel
 	model      *mysql.MModel
+	warehouse  *mysql.Warehouse
 }
 
 func main() {
@@ -67,6 +68,7 @@ func main() {
 		user:       &mysql.UserModel{DB: db},
 		dropdown:   &mysql.DropdownModel{DB: db},
 		model:      &mysql.MModel{DB: db},
+		warehouse:  &mysql.Warehouse{DB: db},
 	}
 
 	srv := &http.Server{

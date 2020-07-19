@@ -58,3 +58,11 @@ type ItemDetails struct {
 	ItemName         string  `json:"item_name"`
 	Price            float64 `json:"price"`
 }
+
+type AllWarehouseItem struct {
+	ID            int    `json:"id"`
+	WarehouseType string `json:"warehouse_type"`
+	Name          string `json:"name"`
+	Address       string `json:"address"`
+	Contact       string `json:"contact"`
+}
