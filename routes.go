@@ -21,6 +21,10 @@ func (app *application) routes() http.Handler {
 	r.Handle("/warehouse/create", app.validateToken(http.HandlerFunc(app.createWarehouse))).Methods("POST")
 	r.Handle("/warehouse/all", app.validateToken(http.HandlerFunc(app.allWarehouses))).Methods("GET")
 
+	r.Handle("/transactions/goodsin", app.validateToken(http.HandlerFunc(app.goodsIn))).Methods("POST")
+	r.Handle("/transactions/movement", app.validateToken(http.HandlerFunc(app.transaction))).Methods("POST")
+	r.Handle("/getSecondaryNumberModelName", app.validateToken(http.HandlerFunc(app.secNumberModel))).Methods("POST")
+
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	r.Handle("/static/", http.StripPrefix("/static", fileServer))
 

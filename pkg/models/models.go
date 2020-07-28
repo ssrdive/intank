@@ -66,3 +66,31 @@ type AllWarehouseItem struct {
 	Address       string `json:"address"`
 	Contact       string `json:"contact"`
 }
+
+type GoodsInItem struct {
+	Model           string
+	PrimaryNumber   string `json:"primary_number"`
+	SecondaryNumber string `json:"secondary_number"`
+	Price           string
+}
+
+type GoodsMovement struct {
+	Model           string `json:"model"`
+	PrimaryNumber   string `json:"primaryNumber"`
+	SecondaryNumber string `json:"secondaryNumber"`
+	Price           string `json:"price"`
+}
+
+type SecNumberModel struct {
+	SecondaryNumber string `json:"secondaryNumber"`
+	Model           string `json:"model"`
+}
+
+type ValidTransfer struct {
+	DocumentID  string
+	ModelID     string
+	PrimaryID   string
+	SecondaryID string
+	Price       string
+	Date        time.Time
+}
