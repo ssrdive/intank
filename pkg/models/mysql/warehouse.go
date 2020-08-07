@@ -57,6 +57,47 @@ func (m *Warehouse) SecNumberModel(primaryNumber string) (models.SecNumberModel,
 	return secMod, nil
 }
 
+func (m *Warehouse) Agewise(model, age int) ([]models.AgeWiseItem, error) {
+	var res []models.AgeWiseItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.AGE_WISE_SEARCH, age, model)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (m *Warehouse) Search(search string) ([]models.SearchResultItem, error) {
+	var k sql.NullString
+	if search == "" {
+		k = sql.NullString{}
+	} else {
+		k = sql.NullString{
+			Valid:  true,
+			String: "%" + search + "%",
+		}
+	}
+
+	var res []models.SearchResultItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.SEARCH, k)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// Stock returns stocks of warehouse
+func (m *Warehouse) Stock(id int) ([]models.WarehouseStockItem, error) {
+	var res []models.WarehouseStockItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.WAREHOUSE_STOCK, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 // All returns all items
 func (m *Warehouse) All() ([]models.AllWarehouseItem, error) {
 	var res []models.AllWarehouseItem

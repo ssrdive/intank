@@ -94,3 +94,35 @@ type ValidTransfer struct {
 	Price       string
 	Date        time.Time
 }
+
+type WarehouseStockItem struct {
+	DocumentID           int    `json:"document_id"`
+	PrimaryID            string `json:"primary_id"`
+	SecondaryID          string `json:"secondary_id"`
+	InStockFor           int    `json:"in_stock_for"`
+	Price                int    `json:"price"`
+	Model                string `json:"model"`
+	Date                 string `json:"date"`
+	DeliveryDocumentType string `json:"delivery_document_type"`
+}
+
+type SearchResultItem struct {
+	DocumentID  int    `json:"document_id"`
+	Model       string `json:"model"`
+	Warehouse   string `json:"warehouse"`
+	PrimaryID   string `json:"primary_id"`
+	SecondaryID string `json:"secondary_id"`
+	Price       int    `json:"price"`
+	WarehouseID int    `json:"warehouse_id"`
+}
+
+type AgeWiseItem struct {
+	DocumentID           int    `json:"document_id"`
+	PrimaryID            string `json:"primary_id"`
+	SecondaryID          string `json:"secondary_id"`
+	InStockFor           int    `json:"in_stock_for"`
+	Price                int    `json:"price"`
+	Model                string `json:"model"`
+	Date                 string `json:"date"`
+	DeliveryDocumentType string `json:"delivery_document_type"`
+}

@@ -20,6 +20,9 @@ func (app *application) routes() http.Handler {
 	r.Handle("/model/all", app.validateToken(http.HandlerFunc(app.allItems))).Methods("GET")
 	r.Handle("/warehouse/create", app.validateToken(http.HandlerFunc(app.createWarehouse))).Methods("POST")
 	r.Handle("/warehouse/all", app.validateToken(http.HandlerFunc(app.allWarehouses))).Methods("GET")
+	r.Handle("/warehouse/stock/{id}", app.validateToken(http.HandlerFunc(app.warehouseStock))).Methods("GET")
+	r.Handle("/search", app.validateToken(http.HandlerFunc(app.search))).Methods("GET")
+	r.Handle("/agewise", app.validateToken(http.HandlerFunc(app.ageWise))).Methods("GET")
 
 	r.Handle("/transactions/goodsin", app.validateToken(http.HandlerFunc(app.goodsIn))).Methods("POST")
 	r.Handle("/transactions/movement", app.validateToken(http.HandlerFunc(app.transaction))).Methods("POST")
