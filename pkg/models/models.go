@@ -126,3 +126,32 @@ type AgeWiseItem struct {
 	Date                 string `json:"date"`
 	DeliveryDocumentType string `json:"delivery_document_type"`
 }
+
+type HistoryItem struct {
+	DocumentID           int    `json:"document_id"`
+	PrimaryID            string `json:"primary_id"`
+	SecondaryID          string `json:"secondary_id"`
+	InStockFor           int    `json:"in_stock_for"`
+	Price                int    `json:"price"`
+	DateIn               string `json:"date_in"`
+	DateOut              string `json:"date_out"`
+	DeliveryDocumentType string `json:"delivery_document_type"`
+	Warehouse            string `json:"warehouse"`
+	WarehouseID          int    `json:"warehouse_id"`
+	Model                string `json:"model"`
+}
+
+type DocsItem struct {
+	DocumentID           int    `json:"document_id"`
+	DeliveryDocumentType string `json:"delivery_document_type"`
+	Date                 string `json:"date"`
+	ToWarehouseID        string `json:"to_warehouse_id"`
+	ToWarehouse          string `json:"to_warehouse"`
+	FromWarehouseID      string `json:"from_warehouse_id"`
+	FromWarehouse        string `json:"from_warehouse"`
+}
+
+type StockByModel struct {
+	Model string `json:"model"`
+	Count int    `json:"count"`
+}

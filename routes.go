@@ -18,9 +18,13 @@ func (app *application) routes() http.Handler {
 	r.Handle("/dropdown/condition/{name}/{where}/{value}", app.validateToken(http.HandlerFunc(app.dropdownConditionHandler))).Methods("GET")
 	r.Handle("/model/create", app.validateToken(http.HandlerFunc(app.createModel))).Methods("POST")
 	r.Handle("/model/all", app.validateToken(http.HandlerFunc(app.allItems))).Methods("GET")
+	r.Handle("/docs/recent", app.validateToken(http.HandlerFunc(app.recentDocs))).Methods("GET")
+	r.Handle("/stock/bymodel", app.validateToken(http.HandlerFunc(app.stockByModel))).Methods("GET")
+	r.Handle("/stock/bywarehouse", app.validateToken(http.HandlerFunc(app.stocksByWarehouse))).Methods("GET")
 	r.Handle("/warehouse/create", app.validateToken(http.HandlerFunc(app.createWarehouse))).Methods("POST")
 	r.Handle("/warehouse/all", app.validateToken(http.HandlerFunc(app.allWarehouses))).Methods("GET")
 	r.Handle("/warehouse/stock/{id}", app.validateToken(http.HandlerFunc(app.warehouseStock))).Methods("GET")
+	r.Handle("/history/{id}", app.validateToken(http.HandlerFunc(app.history))).Methods("GET")
 	r.Handle("/search", app.validateToken(http.HandlerFunc(app.search))).Methods("GET")
 	r.Handle("/agewise", app.validateToken(http.HandlerFunc(app.ageWise))).Methods("GET")
 

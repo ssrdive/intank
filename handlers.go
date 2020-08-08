@@ -162,6 +162,39 @@ func (app *application) createModel(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (app *application) stocksByWarehouse(w http.ResponseWriter, r *http.Request) {
+	results, err := app.warehouse.StockByWarehouse()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (app *application) stockByModel(w http.ResponseWriter, r *http.Request) {
+	results, err := app.warehouse.StockByModel()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (app *application) recentDocs(w http.ResponseWriter, r *http.Request) {
+	results, err := app.warehouse.RecentDocs()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
 func (app *application) allItems(w http.ResponseWriter, r *http.Request) {
 	results, err := app.model.All()
 	if err != nil {
@@ -203,6 +236,24 @@ func (app *application) search(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 
 	results, err := app.warehouse.Search(search)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (app *application) history(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	if id == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	results, err := app.warehouse.History(id)
 	if err != nil {
 		app.serverError(w, err)
 		return

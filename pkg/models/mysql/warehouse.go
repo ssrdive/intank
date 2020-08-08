@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"time"
 
 	"github.com/ssrdive/basara/pkg/models"
 	"github.com/ssrdive/basara/pkg/sql/queries"
@@ -67,6 +68,36 @@ func (m *Warehouse) Agewise(model, age int) ([]models.AgeWiseItem, error) {
 	return res, nil
 }
 
+func (m *Warehouse) StockByWarehouse() ([]models.StockByModel, error) {
+	var res []models.StockByModel
+	err := mysequel.QueryToStructs(&res, m.DB, queries.STOCKS_BY_WAREHOUSE)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (m *Warehouse) StockByModel() ([]models.StockByModel, error) {
+	var res []models.StockByModel
+	err := mysequel.QueryToStructs(&res, m.DB, queries.STOCK_BY_MODELS)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (m *Warehouse) RecentDocs() ([]models.DocsItem, error) {
+	var res []models.DocsItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.RECENT_DOCUMENTS)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 func (m *Warehouse) Search(search string) ([]models.SearchResultItem, error) {
 	var k sql.NullString
 	if search == "" {
@@ -80,6 +111,16 @@ func (m *Warehouse) Search(search string) ([]models.SearchResultItem, error) {
 
 	var res []models.SearchResultItem
 	err := mysequel.QueryToStructs(&res, m.DB, queries.SEARCH, k)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (m *Warehouse) History(id string) ([]models.HistoryItem, error) {
+	var res []models.HistoryItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.HISTORY, id)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +172,7 @@ func (m *Warehouse) Movement(form url.Values) (int64, error) {
 
 	for i, item := range movementItems {
 		primaryIDs = append(primaryIDs, item.PrimaryNumber)
-		primaryIDStr += item.PrimaryNumber
+		primaryIDStr += "'" + item.PrimaryNumber + "'"
 		if i != len(movementItems)-1 {
 			primaryIDStr += ","
 		}
@@ -143,9 +184,6 @@ func (m *Warehouse) Movement(form url.Values) (int64, error) {
 		return 0, err
 	}
 
-	fmt.Println(len(movementItems))
-	fmt.Println(len(res))
-
 	if len(movementItems) != len(res) {
 		return 0, errors.New("Invalid Transfers")
 	}
@@ -154,7 +192,7 @@ func (m *Warehouse) Movement(form url.Values) (int64, error) {
 		_, err := mysequel.Insert(mysequel.Table{
 			TableName: "stock_history",
 			Columns:   []string{"document_id", "model_id", "primary_id", "secondary_id", "price", "date_in", "date_out"},
-			Vals:      []interface{}{shentry.DocumentID, shentry.ModelID, shentry.PrimaryID, shentry.SecondaryID, shentry.Price, shentry.Date.Format("2006-01-02"), form.Get("date")},
+			Vals:      []interface{}{shentry.DocumentID, shentry.ModelID, shentry.PrimaryID, shentry.SecondaryID, shentry.Price, shentry.Date.Format("2006-01-02 15:05:05"), form.Get("date")},
 			Tx:        tx,
 		})
 		if err != nil {
@@ -166,7 +204,7 @@ func (m *Warehouse) Movement(form url.Values) (int64, error) {
 	did, err := mysequel.Insert(mysequel.Table{
 		TableName: "document",
 		Columns:   []string{"document_type_id", "warehouse_id", "from_warehouse_id", "date"},
-		Vals:      []interface{}{1, form.Get("warehouse_id"), form.Get("from_warehouse_id"), form.Get("date")},
+		Vals:      []interface{}{form.Get("document_type"), form.Get("from_warehouse_id"), form.Get("warehouse_id"), time.Now().Format("2006-01-02 15:04:05")},
 		Tx:        tx,
 	})
 	if err != nil {
@@ -184,7 +222,7 @@ func (m *Warehouse) Movement(form url.Values) (int64, error) {
 		_, err := mysequel.Insert(mysequel.Table{
 			TableName: "main_stock",
 			Columns:   []string{"document_id", "model_id", "primary_id", "secondary_id", "price"},
-			Vals:      []interface{}{did, shentry.ModelID, shentry.PrimaryID, shentry.SecondaryID, shentry.Price, form.Get("date")},
+			Vals:      []interface{}{did, shentry.ModelID, shentry.PrimaryID, shentry.SecondaryID, shentry.Price},
 			Tx:        tx,
 		})
 		if err != nil {
@@ -215,7 +253,7 @@ func (m *Warehouse) GoodsIn(form url.Values) (int64, error) {
 	id, err := mysequel.Insert(mysequel.Table{
 		TableName: "document",
 		Columns:   []string{"document_type_id", "warehouse_id", "from_warehouse_id", "date"},
-		Vals:      []interface{}{1, form.Get("warehouse_id"), form.Get("from_warehouse_id"), form.Get("date")},
+		Vals:      []interface{}{1, form.Get("warehouse_id"), form.Get("from_warehouse_id"), time.Now().Format("2006-01-02 15:04:05")},
 		Tx:        tx,
 	})
 	if err != nil {
