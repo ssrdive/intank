@@ -78,3 +78,8 @@ const STOCKS_BY_WAREHOUSE = `
 	LEFT JOIN warehouse W ON W.id = D.warehouse_id
 	GROUP BY W.name
 `
+
+const ALL_USERS = `
+	SELECT username, name, type
+	FROM user
+`

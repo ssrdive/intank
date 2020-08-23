@@ -18,6 +18,33 @@ type Warehouse struct {
 	DB *sql.DB
 }
 
+func (m *Warehouse) CreateUser(rparams, oparams []string, form url.Values) (int64, error) {
+	tx, err := m.DB.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			return
+		}
+		_ = tx.Commit()
+	}()
+
+	id, err := mysequel.Insert(mysequel.FormTable{
+		TableName: "user",
+		RCols:     rparams,
+		OCols:     oparams,
+		Form:      form,
+		Tx:        tx,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
 // Create creates an item
 func (m *Warehouse) Create(rparams, oparams []string, form url.Values) (int64, error) {
 	tx, err := m.DB.Begin()

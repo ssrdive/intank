@@ -52,3 +52,13 @@ func (m *MModel) All() ([]models.AllItemItem, error) {
 
 	return res, nil
 }
+
+func (m *MModel) UserAll() ([]models.AllUserItem, error) {
+	var res []models.AllUserItem
+	err := mysequel.QueryToStructs(&res, m.DB, queries.ALL_USERS)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

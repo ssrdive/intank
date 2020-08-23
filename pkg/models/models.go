@@ -155,3 +155,9 @@ type StockByModel struct {
 	Model string `json:"model"`
 	Count int    `json:"count"`
 }
+
+type AllUserItem struct {
+	Username string `json:"username"`
+	Name     string `json:"name"`
+	Type     string `json:"type"`
+}

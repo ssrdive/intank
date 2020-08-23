@@ -135,6 +135,33 @@ func (app *application) createWarehouse(w http.ResponseWriter, r *http.Request) 
 
 }
 
+func (app *application) craeteUser(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	requiredParams := []string{"username", "password", "name", "type"}
+	optionalParams := []string{}
+	for _, param := range requiredParams {
+		if v := r.PostForm.Get(param); v == "" {
+			fmt.Println(param)
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+	}
+
+	id, err := app.warehouse.CreateUser(requiredParams, optionalParams, r.PostForm)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	fmt.Fprintf(w, "%d", id)
+
+}
+
 func (app *application) createModel(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -186,6 +213,17 @@ func (app *application) stockByModel(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) recentDocs(w http.ResponseWriter, r *http.Request) {
 	results, err := app.warehouse.RecentDocs()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (app *application) allUser(w http.ResponseWriter, r *http.Request) {
+	results, err := app.model.UserAll()
 	if err != nil {
 		app.serverError(w, err)
 		return
